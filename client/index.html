@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt_BR"></html>
+<head>
+    <meta charset="UTF-8">
+    <title>Client</title>
+</head>
+<style>
+
+</style>
+
+<div id="container">
+    <output></output>
+
+    <div id="input-container">
+        <input type="text">
+        <div id="send-button">
+            <img src="/img/send-message.png" width="20px" alt="Enviar">
+        </div>
+    </div>
+</div>
+
+<script>
+    const input = document.querySelector('input');
+    const output = document.querySelector('output');
+    const img = document.querySelector('img');
+
+    const ws = new WebSocket('ws://localhost:8000/avisos');
+
+    ws.addEventListener('message', msg => {
+        const span = document.createElement('span');
+        span.classList.add('zoto');
+        span.textContent = msg.data;
+
+        output.appendChild(span);
+    });
+
+    ws.addEventListener('open', console.log)
+    ws.addEventListener('message', console.log)
+
+    img.addEventListener('click', function(){
+        ws.send(input.value);
+        const span = document.createElement('span');
+        span.classList.add('eu');
+        span.textContent = input.value;
+
+        output.appendChild(span);
+        output.scrollTop = output.scrollHeight;
+
+        input.value = '';
+    });
+
+    input.addEventListener('keypress', e => e.key === 'Enter' && img.dispatchEvent(new Event('click')));
+</script>
